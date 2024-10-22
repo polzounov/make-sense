@@ -8,7 +8,7 @@ export default ({ mode }: UserConfig): UserConfigExport => {
     ...loadEnv(mode || "development", process.cwd()),
   };
   return defineConfig({
-    base: "/make-sense/",
+    base: mode === "development" ? "/" : "/make-sense/",
     plugins: [react()],
     build: {
       minify: "terser",
@@ -18,6 +18,9 @@ export default ({ mode }: UserConfig): UserConfigExport => {
         treeshake: true,
         maxParallelFileReads: 4,
         output: {
+          assetFileNames: "assets/[name].[ext]",
+          chunkFileNames: "assets/[name].[hash].js",
+          entryFileNames: "assets/[name].[hash].js",
           manualChunks: {
             lodash: ["lodash"],
             classnames: ["classnames"],
@@ -40,6 +43,8 @@ export default ({ mode }: UserConfig): UserConfigExport => {
           },
         },
       },
+      outDir: "dist",
+      assetsDir: "assets",
     },
     esbuild: {
       logOverride: { "this-is-undefined-in-esm": "silent" },
